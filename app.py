@@ -2,17 +2,24 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import requests
+import os
 import pickle
 import folium
 from streamlit_folium import st_folium
 from streamlit_geolocation import streamlit_geolocation
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
 # --- 1. INITIAL CONFIGURATION ---
 st.set_page_config(page_title="EV Smart RSU Reroute", layout="wide")
 
-TOMTOM_KEY = "akPHWg9CrZg6SDG085lPj5Dlb0vfrUNA" 
-OSRM_URL = "http://localhost:5001/route/v1/driving/"
+load_dotenv()
+
+TOMTOM_KEY = os.getenv("TOMTOM_API_KEY")
+OSRM_URL = os.getenv("OSRM_URL")
+if not TOMTOM_KEY:
+    st.error("TOMTOM API KEY not found. Check your .env file")
+    st.stop()
 
 # --- 2. ASSET LOADING ---
 @st.cache_resource
